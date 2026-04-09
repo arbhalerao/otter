@@ -3,7 +3,7 @@ package raft
 import (
 	"log"
 
-	"github.com/arbhalerao/raft/storage"
+	"github.com/arbhalerao/otter/storage"
 )
 
 func (rf *Rf) persist() {

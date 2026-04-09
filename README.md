@@ -1,5 +1,13 @@
-# raft
-Implementation of the Raft consensus algorithm in Go
+# otter
+
+Implementation of the Raft consensus algorithm in Go.
+
+Named after the otter — a group of otters is called a *raft*. These animals float together, holding on to each other to stay in sync, much like Raft nodes replicate logs and elect leaders to maintain consensus.
+
+Part of a trilogy of distributed systems projects:
+1. **[walrus](https://github.com/arbhalerao/walrus)** — single-node persistent KV store with WAL
+2. **[meerkat](https://github.com/arbhalerao/meerkat)** — distributed KV with consistent hashing and replication
+3. **[otter](https://github.com/arbhalerao/otter)** — Raft consensus protocol from scratch _(you are here)_
 
 ## Build
 

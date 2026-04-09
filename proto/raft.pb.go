@@ -366,7 +366,7 @@ const file_proto_raft_proto_rawDesc = "" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess2|\n" +
 	"\x04Raft\x126\n" +
 	"\vRequestVote\x12\x12.proto.VoteRequest\x1a\x13.proto.VoteResponse\x12<\n" +
-	"\rAppendEntries\x12\x14.proto.AppendRequest\x1a\x15.proto.AppendResponseB\"Z github.com/arbhalerao/raft/protob\x06proto3"
+	"\rAppendEntries\x12\x14.proto.AppendRequest\x1a\x15.proto.AppendResponseB\"Z github.com/arbhalerao/otter/protob\x06proto3"
 
 var (
 	file_proto_raft_proto_rawDescOnce sync.Once

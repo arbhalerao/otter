@@ -1,4 +1,4 @@
-module github.com/arbhalerao/raft
+module github.com/arbhalerao/otter
 
 go 1.24.2
 

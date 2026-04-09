@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	pb "github.com/arbhalerao/raft/proto"
+	pb "github.com/arbhalerao/otter/proto"
 )
 
 func (rf *Rf) heartbeatLoop() {

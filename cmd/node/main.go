@@ -10,7 +10,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/arbhalerao/raft/raft"
+	"github.com/arbhalerao/otter/raft"
 )
 
 func main() {

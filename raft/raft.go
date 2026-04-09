@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/arbhalerao/raft/proto"
-	"github.com/arbhalerao/raft/storage"
+	pb "github.com/arbhalerao/otter/proto"
+	"github.com/arbhalerao/otter/storage"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

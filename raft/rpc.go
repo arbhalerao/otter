@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	pb "github.com/arbhalerao/raft/proto"
+	pb "github.com/arbhalerao/otter/proto"
 )
 
 type rpcServer struct {
