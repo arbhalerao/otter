@@ -28,7 +28,6 @@ type Peer struct {
 type Rf struct {
 	mu sync.Mutex
 
-	// identity
 	id    int32
 	peers []Peer
 	addr  string
@@ -49,10 +48,8 @@ type Rf struct {
 	role   Role
 	leader int32
 
-	// state machine
 	sm map[string]string
 
-	// channels and timers
 	electTimer *time.Timer
 	hbTicker   *time.Ticker
 	stopCh     chan struct{}
@@ -60,7 +57,6 @@ type Rf struct {
 	store *storage.Store
 	srv   *grpc.Server
 
-	// peer connections
 	clients   map[string]pb.RaftClient
 	clientsMu sync.Mutex
 }

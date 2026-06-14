@@ -2,12 +2,14 @@
 
 Implementation of the Raft consensus algorithm in Go.
 
-Named after the otter — a group of otters is called a *raft*. These animals float together, holding on to each other to stay in sync, much like Raft nodes replicate logs and elect leaders to maintain consensus.
+## Architecture
 
-Part of a trilogy of distributed systems projects:
-1. **[walrus](https://github.com/arbhalerao/walrus)** — single-node persistent KV store with WAL
-2. **[meerkat](https://github.com/arbhalerao/meerkat)** — distributed KV with consistent hashing and replication
-3. **[otter](https://github.com/arbhalerao/otter)** — Raft consensus protocol from scratch _(you are here)_
+- Multi-node implementation of the **Raft consensus protocol** in Go. Each node runs an identical process; peers communicate over **gRPC** with two RPCs: `RequestVote` and `AppendEntries`. Commands are applied to a replicated in-memory **key-value state machine** (`SET`/`DEL`).
+- Per-node concurrency is structured as cooperating loops under a single `sync.Mutex` (locks released around blocking RPCs): an **election loop** (randomized 150–300 ms timeout), a leader **heartbeat loop** (50 ms), log **replication** with per-follower `nextIndex`/`matchIndex` + backtracking, and an **apply loop** that advances `lastApplied` toward `commitIndex`.
+- **Safety**: votes require an up-to-date log; the commit index only advances when a majority match an entry of the **current term**; followers truncate conflicting entries.
+- **Durability**: persistent state (`currentTerm`, `votedFor`, full log) is written to JSON via atomic temp-file + rename and restored on startup, so a restarted node rejoins without violating safety. Cluster membership is static (CLI `-peers`), any odd size.
+
+![Architecture](docs/arch.png)
 
 ## Build
 

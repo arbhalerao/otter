@@ -19,19 +19,16 @@ func (s *rpcServer) RequestVote(_ context.Context, req *pb.VoteRequest) (*pb.Vot
 
 	resp := &pb.VoteResponse{Term: rf.ct, VoteGranted: false}
 
-	// rule 1: reply false if term < currentTerm
 	if req.Term < rf.ct {
 		return resp, nil
 	}
 
-	// if RPC term > currentTerm, convert to follower
 	if req.Term > rf.ct {
 		rf.becomeFollower(req.Term)
 		resp.Term = rf.ct
 	}
 
-	// rule 2: grant vote if votedFor is null or candidateId, and candidate's log
-	// is at least as up-to-date as receiver's log
+	// grant vote only if the candidate's log is at least as up-to-date as ours
 	lastIdx, lastTerm := rf.lastLogInfo()
 	logOk := req.LastLogTerm > lastTerm ||
 		(req.LastLogTerm == lastTerm && req.LastLogIndex >= lastIdx)
@@ -54,12 +51,10 @@ func (s *rpcServer) AppendEntries(_ context.Context, req *pb.AppendRequest) (*pb
 
 	resp := &pb.AppendResponse{Term: rf.ct, Success: false}
 
-	// rule 1: reply false if term < currentTerm
 	if req.Term < rf.ct {
 		return resp, nil
 	}
 
-	// valid leader, reset election timer
 	rf.resetElectTimer()
 
 	if req.Term > rf.ct {
@@ -73,8 +68,7 @@ func (s *rpcServer) AppendEntries(_ context.Context, req *pb.AppendRequest) (*pb
 
 	rf.leader = req.LeaderId
 
-	// rule 2: reply false if log doesn't contain an entry at prevLogIndex
-	// whose term matches prevLogTerm
+	// reject if our log lacks a matching entry at prevLogIndex/prevLogTerm
 	if req.PrevLogIndex > 0 {
 		if int(req.PrevLogIndex) >= len(rf.lg) {
 			return resp, nil
@@ -84,7 +78,6 @@ func (s *rpcServer) AppendEntries(_ context.Context, req *pb.AppendRequest) (*pb
 		}
 	}
 
-	// rule 3 & 4: conflict detection and append new entries
 	idx := req.PrevLogIndex + 1
 	for i, entry := range req.Entries {
 		pos := idx + int32(i)
@@ -99,7 +92,7 @@ func (s *rpcServer) AppendEntries(_ context.Context, req *pb.AppendRequest) (*pb
 	}
 	rf.persist()
 
-	// rule 5: if leaderCommit > commitIndex, set commitIndex = min(leaderCommit, index of last new entry)
+	// advance commitIndex to min(leaderCommit, last local entry)
 	if req.LeaderCommit > rf.ci {
 		lastNew := int32(len(rf.lg) - 1)
 		if req.LeaderCommit < lastNew {
